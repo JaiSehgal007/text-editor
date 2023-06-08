@@ -5,6 +5,7 @@ const Form = (props) => {
     const handleUpClick=()=>{
         let newt=text.toUpperCase();
         setText(newt);
+        props.showAlert("Converted to upper case","warning");
     }
     const handleLoClick=()=>{
         let newt=text.toLowerCase();

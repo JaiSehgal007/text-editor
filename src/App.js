@@ -82,25 +82,57 @@ import './App.css';
 import Navbar from './components/navbar';
 import Form from './components/form'
 import { useState } from 'react';
+import Alert from './components/Alert';
+import About from './components/about';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from "react-router-dom";
 
 function App() {
   const [mode, setmode] = useState('light'); //weather dark mode is enabled or not
-  const toggleMode=()=>{
-    if(mode==='light'){
+  const [alert, setAlert] = useState(null);
+
+  const showAlert = (message, typ) => {
+    setAlert({
+      msg: message,
+      type: typ
+    })
+    setTimeout(() => {
+      setAlert(null);
+    }, 3000);
+  }
+  const toggleMode = () => {
+    if (mode === 'light') {
       setmode('dark');
-      document.body.style.backgroundColor='#042743';
+      document.body.style.backgroundColor = '#042743';
+      showAlert("Dark maode has been enabled", "success");
+      // to change the tile of the page use the following
+      // document.title="jefne"
     }
-    else{
-       setmode('light');
-       document.body.style.backgroundColor='white';
+    else {
+      setmode('light');
+      document.body.style.backgroundColor = 'white';
+      showAlert("Light mode has been enabled", "success")
     }
   }
   return (
     <>
-      <Navbar title="TextUtils" aboutText="About Us" mode={mode} toggleMode={toggleMode}/>
-      <div className="container">
-        <Form mode={mode}/>
-      </div>
+      <Router>
+        <Navbar title="TextUtils" aboutText="About Us" mode={mode} toggleMode={toggleMode} />
+        <Alert alert={alert} />
+        {/* here we are using alert as an object */}
+
+        <div className="container my-3">
+          <Routes>
+            <Route path="/about" element={<About />} />
+            <Route path="/" element={<Form heading="Enter the text to analyze below" onShowAlert={showAlert} />} />
+          </Routes>
+        </div>
+      </Router>
     </>
   );
 }
